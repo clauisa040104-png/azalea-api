@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-tensorflow==2.18.0
+tflite-runtime
 pillow
 numpy
 python-multipart
