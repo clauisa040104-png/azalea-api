@@ -4,6 +4,7 @@ import tflite_runtime.interpreter as tflite
 import numpy as np
 from PIL import Image
 import io
+import os
 
 app = FastAPI()
 
@@ -15,7 +16,8 @@ app.add_middleware(
 )
 
 # Cargar modelo .tflite
-interpreter = tflite.Interpreter(model_path='azalea_model.tflite')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+interpreter = tflite.Interpreter(model_path=os.path.join(BASE_DIR, 'azalea_model.tflite'))
 interpreter.allocate_tensors()
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
