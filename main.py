@@ -26,7 +26,7 @@ output_details = interpreter.get_output_details()
 labels = ['botrytis', 'mancha_foliar', 'no_azalea', 'oidio', 'phytophthora', 'roya_en_hoja', 'sana']
 
 # ── Ontología OWL ──────────────────────────────────────────────
-OWL_PATH = os.path.join(BASE_DIR, 'ontology', 'azalea_ontology.owl')
+OWL_PATH = os.path.join(BASE_DIR, 'azalea_ontology.owl')
 onto = get_ontology(f"file://{OWL_PATH}").load()
 
 def extraer_conocimiento_owl() -> str:
