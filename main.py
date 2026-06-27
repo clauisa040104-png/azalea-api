@@ -100,7 +100,7 @@ async def chatbot(req: ChatRequest):
         mensajes.append({"role": "user", "content": req.mensaje})
 
         response = client.chat.completions.create(
-            model="meta-llama/llama-3.1-8b-instruct:free",
+            model="google/gemma-3-1b-it:free",
             messages=mensajes,
             max_tokens=500,
             temperature=0.7
