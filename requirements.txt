@@ -5,4 +5,4 @@ pillow
 numpy==1.26.4
 python-multipart
 owlready2
-groq
+openai
