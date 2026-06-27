@@ -100,7 +100,7 @@ async def chatbot(req: ChatRequest):
         mensajes.append({"role": "user", "content": req.mensaje})
 
         response = client.chat.completions.create(
-            model="qwen/qwen3-0.6b:free",
+            model="cohere/north-mini-code:free",
             messages=mensajes,
             max_tokens=500,
             temperature=0.7
