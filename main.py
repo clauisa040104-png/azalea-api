@@ -207,7 +207,7 @@ async def chatbot(req: ChatRequest):
         mensajes.append({"role": "user", "content": req.mensaje})
 
         response = client.chat.completions.create(
-            model="deepseek/deepseek-r1:free",
+            model="deepseek/deepseek-chat-v3-0324:free",
             messages=mensajes,
             max_tokens=500,
             temperature=0.7
