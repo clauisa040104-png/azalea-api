@@ -7,7 +7,7 @@ import io
 import os
 from pydantic import BaseModel
 from owlready2 import get_ontology
-import google.generativeai as genai
+from groq import Groq
 
 app = FastAPI()
 app.add_middleware(
@@ -40,9 +40,9 @@ COMPATIBLES: Camelia, Hortensia, Rododendro, Helechos, Hostas.
 INCOMPATIBLES: Lavanda, Geranio, Nogal (produce juglona tóxica).
 """
 
-# ── Gemini ─────────────────────────────────────────────────────
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-genai.configure(api_key=GEMINI_API_KEY)
+# ── Groq ────────────────────────────────────────────────────────
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+groq_client = Groq(api_key=GROQ_API_KEY)
 
 SYSTEM_PROMPT = f"""Eres AzaleaBot, el asistente experto del sistema AzaleaCare.
 Tu conocimiento proviene EXCLUSIVAMENTE de la siguiente ontología OWL formal sobre azaleas.
@@ -57,15 +57,10 @@ Si la pregunta no está relacionada con azaleas o su cuidado, indica amablemente
 Cuando menciones enfermedades, incluye siempre los síntomas y tratamientos de la ontología.
 """
 
-gemini_model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash-8b",
-    system_instruction=SYSTEM_PROMPT
-)
-
 # ── Modelos de request ─────────────────────────────────────────
 class ChatRequest(BaseModel):
     mensaje: str
-    historial: list[dict] = []  # [{"role": "user"/"model", "content": "..."}]
+    historial: list[dict] = []
 
 # ── Endpoints ──────────────────────────────────────────────────
 @app.get("/")
@@ -91,17 +86,25 @@ async def predecir(file: UploadFile = File(...)):
 
 @app.post("/chatbot")
 async def chatbot(req: ChatRequest):
-    # Construir historial para Gemini
-    historial_gemini = []
-    for msg in req.historial[-10:]:
-        historial_gemini.append({
-            "role": msg["role"],
-            "parts": [msg["content"]]
-        })
+    try:
+        mensajes = [{"role": "system", "content": SYSTEM_PROMPT}]
 
-    chat = gemini_model.start_chat(history=historial_gemini)
-    respuesta = chat.send_message(req.mensaje)
+        for msg in req.historial[-10:]:
+            mensajes.append({
+                "role": msg.get("role", "user"),
+                "content": msg.get("content", "")
+            })
 
-    return {
-        "respuesta": respuesta.text
-    }
+        mensajes.append({"role": "user", "content": req.mensaje})
+
+        response = groq_client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=mensajes,
+            max_tokens=500,
+            temperature=0.7
+        )
+
+        return {"respuesta": response.choices[0].message.content}
+
+    except Exception as e:
+        return {"respuesta": f"Error al procesar tu consulta: {str(e)}"}
