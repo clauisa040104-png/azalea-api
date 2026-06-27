@@ -29,23 +29,16 @@ labels = ['botrytis', 'mancha_foliar', 'no_azalea', 'oidio', 'phytophthora', 'ro
 OWL_PATH = os.path.join(BASE_DIR, 'azalea_ontology.owl')
 onto = get_ontology(f"file://{OWL_PATH}").load()
 
-def extraer_conocimiento_owl() -> str:
-    """Lee la ontología y la convierte en texto para el contexto de Gemini."""
-    lineas = []
-    for ind in onto.individuals():
-        tipos = [c.name for c in ind.is_a if hasattr(c, 'name')]
-        props = {}
-        for prop in ind.get_properties():
-            valores = prop[ind]
-            if valores:
-                props[prop.name] = [str(v) for v in valores]
-        if props or tipos:
-            lineas.append(f"\n[{ind.name}] tipo={tipos}")
-            for k, v in props.items():
-                lineas.append(f"  {k}: {'; '.join(v)}")
-    return "\n".join(lineas)
-
-CONTEXTO_OWL = extraer_conocimiento_owl()
+CONTEXTO_OWL = """
+ENFERMEDADES: Oidio (polvo blanco, fungicida azufre), ManchaFoliar (manchas marrones, fungicida cobre), RoyaEnHoja (pústulas naranjas, fungicida sistémico), Phytophthora (pudrición raíz, fosetil-aluminio), Botrytis (moho gris, fungicida botrytis), PlantaSana (cuidado preventivo), NoAzalea (imagen no es azalea).
+RIEGO: cada 2-3 días en verano, 5-7 días en invierno. Agua sin cloro.
+ILUMINACION: 4-6 horas luz indirecta. Sin sol directo.
+TEMPERATURA: óptima 15-21°C, mínima 5°C, máxima 25°C.
+ABONO: fertilizante acidófilo cada 15-30 días en primavera-verano. pH 4.5-6.0.
+PODA: después de floración en primavera. Nunca en otoño-invierno.
+COMPATIBLES: Camelia, Hortensia, Rododendro, Helechos, Hostas.
+INCOMPATIBLES: Lavanda, Geranio, Nogal (produce juglona tóxica).
+"""
 
 # ── Gemini ─────────────────────────────────────────────────────
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
