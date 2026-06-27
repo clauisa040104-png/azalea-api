@@ -58,7 +58,7 @@ Cuando menciones enfermedades, incluye siempre los síntomas y tratamientos de l
 """
 
 gemini_model = genai.GenerativeModel(
-    model_name="gemini-2.0-flash",
+    model_name="gemini-1.5-flash-8b",
     system_instruction=SYSTEM_PROMPT
 )
 
