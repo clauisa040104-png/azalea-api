@@ -7,7 +7,7 @@ import io
 import os
 from pydantic import BaseModel
 from owlready2 import get_ontology
-from groq import Groq
+import openai
 
 app = FastAPI()
 app.add_middleware(
@@ -40,9 +40,11 @@ COMPATIBLES: Camelia, Hortensia, Rododendro, Helechos, Hostas.
 INCOMPATIBLES: Lavanda, Geranio, Nogal (produce juglona tóxica).
 """
 
-# ── Groq ────────────────────────────────────────────────────────
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
-groq_client = Groq(api_key=GROQ_API_KEY)
+# ── OpenRouter ────────────────────────────────────────────────
+client = openai.OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.environ.get("OPENROUTER_API_KEY", "")
+)
 
 SYSTEM_PROMPT = f"""Eres AzaleaBot, el asistente experto del sistema AzaleaCare.
 Tu conocimiento proviene EXCLUSIVAMENTE de la siguiente ontología OWL formal sobre azaleas.
@@ -97,8 +99,8 @@ async def chatbot(req: ChatRequest):
 
         mensajes.append({"role": "user", "content": req.mensaje})
 
-        response = groq_client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+        response = client.chat.completions.create(
+            model="mistralai/mistral-7b-instruct:free",
             messages=mensajes,
             max_tokens=500,
             temperature=0.7
