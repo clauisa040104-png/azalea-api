@@ -203,7 +203,7 @@ async def chatbot(req: ChatRequest):
         response = client.chat.completions.create(
             model="nvidia/nemotron-3-ultra-550b-a55b:free",
             messages=mensajes,
-            max_tokens=500,
+            max_tokens=1500,
             temperature=0.7
         )
 
