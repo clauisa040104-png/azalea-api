@@ -201,7 +201,7 @@ async def chatbot(req: ChatRequest):
         mensajes.append({"role": "user", "content": req.mensaje})
 
         response = client.chat.completions.create(
-            model="cohere/north-mini-code:free",
+            model="mistralai/mistral-7b-instruct:free",
             messages=mensajes,
             max_tokens=500,
             temperature=0.7
