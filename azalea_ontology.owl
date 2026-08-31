@@ -349,6 +349,20 @@
         <tieneTratamiento rdf:resource="#TratamientoEliminarPartesAfectadas"/>
     </owl:NamedIndividual>
 
+<!-- DEFICIENCIA DE MAGNESIO -->
+<owl:NamedIndividual rdf:about="#DeficienciaMagnesio">
+    <rdf:type rdf:resource="#Enfermedad"/>
+    <nombreComun>Deficiencia de Magnesio</nombreComun>
+    <descripcion>Trastorno nutricional (no infeccioso) causado por falta de magnesio disponible en el sustrato, frecuentemente agravado por un pH fuera del rango ácido óptimo. Provoca clorosis internerval, sobre todo en hojas más viejas.</descripcion>
+    <agenteCausal>Deficiencia nutricional (falta de magnesio en el sustrato, agravada por pH inadecuado)</agenteCausal>
+    <tieneSeveridad rdf:resource="#SeveridadLeve"/>
+    <tieneSeveridad rdf:resource="#SeveridadModerada"/>
+    <tieneSintoma rdf:resource="#SintomaAmarillamiento"/>
+    <tieneSintoma rdf:resource="#SintomaClorosisInternervalHojasNuevas"/>
+    <tieneTratamiento rdf:resource="#TratamientoAbonoMagnesio"/>
+    <tieneTratamiento rdf:resource="#TratamientoMejorarDrenaje"/>
+</owl:NamedIndividual>
+
     <!-- SANA -->
     <owl:NamedIndividual rdf:about="#PlantaSana">
         <rdf:type rdf:resource="#Enfermedad"/>
@@ -384,6 +398,11 @@
         <rdf:type rdf:resource="#Sintoma"/>
         <descripcion>Coloración amarilla de las hojas (clorosis), indicativo de daño celular o deficiencia</descripcion>
     </owl:NamedIndividual>
+
+     <owl:NamedIndividual rdf:about="#SintomaClorosisInternervalHojasNuevas">
+    <rdf:type rdf:resource="#Sintoma"/>
+    <descripcion>Amarilleo marcado entre las venas de las hojas nuevas, con la vena principal aún verde; se intensifica en suelos con pH fuera del rango 4.5-6.0</descripcion>
+</owl:NamedIndividual>
 
     <owl:NamedIndividual rdf:about="#SintomaManchasMarrones">
         <rdf:type rdf:resource="#Sintoma"/>
@@ -483,6 +502,11 @@
         <rdf:type rdf:resource="#Tratamiento"/>
         <descripcion>Aplicar fungicida específico para Botrytis (iprodiona, fenhexamida o pirimetanil). Alternar principios activos para evitar resistencias. Tratar cada 7 días en condiciones húmedas.</descripcion>
     </owl:NamedIndividual>
+
+     <owl:NamedIndividual rdf:about="#TratamientoAbonoMagnesio">
+    <rdf:type rdf:resource="#Tratamiento"/>
+    <descripcion>Aplicar fertilizante rico en magnesio (sulfato de magnesio disuelto en agua de riego, tipo sal de Epsom) cada 4-6 semanas. Verificar que el pH del sustrato esté entre 4.5-6.0, ya que un pH alcalino bloquea la absorción de magnesio aunque esté presente en el suelo.</descripcion>
+</owl:NamedIndividual>
 
     <owl:NamedIndividual rdf:about="#TratamientoEliminarPartesAfectadas">
         <rdf:type rdf:resource="#Tratamiento"/>
