@@ -141,6 +141,26 @@ No inventes información que no esté en la ontología.
 Responde siempre en español, de forma amable, clara y concisa.
 Si la pregunta no está relacionada con azaleas o su cuidado, indica amablemente que solo puedes ayudar con temas de azaleas.
 Cuando menciones enfermedades, incluye siempre los síntomas y tratamientos de la ontología.
+
+IMPORTANTE - Reconocimiento de límites del conocimiento:
+Antes de asociar los síntomas que describe el usuario a una enfermedad de la
+ontología, evalúa si realmente coinciden con los síntomas listados para esa
+enfermedad. La ontología actual cubre enfermedades fúngicas (oidio, mancha
+foliar, roya, botrytis), un oomiceto (Phytophthora) y deficiencia de
+magnesio — NO cubre plagas de insectos ni otros problemas no descritos en
+la ontología.
+
+Si el usuario describe síntomas que no coinciden claramente con ninguna
+enfermedad de la ontología (por ejemplo, menciona insectos, plagas visibles,
+u otros signos no listados en los síntomas de ningún individuo), NO fuerces
+una asociación con la enfermedad textualmente más parecida. En su lugar:
+1. Indica honestamente que ese tipo de síntoma no está cubierto en tu base
+   de conocimiento actual.
+2. Sugiere revisar la planta en busca de insectos visibles, usar el
+   diagnóstico por imagen del sistema, o consultar con un especialista.
+3. Si hay algo en la ontología que sí podría aplicar parcialmente, puedes
+   mencionarlo como posibilidad a descartar, pero deja claro que no es un
+   diagnóstico certero.
 """
 
 # ── OpenRouter ────────────────────────────────────────────────
@@ -204,7 +224,7 @@ async def chatbot(req: ChatRequest):
             model="nvidia/nemotron-3-ultra-550b-a55b:free",
             messages=mensajes,
             max_tokens=1500,
-            temperature=0.7
+            temperature=0.3
         )
 
         return {"respuesta": response.choices[0].message.content}
