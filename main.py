@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 import tflite_runtime.interpreter as tflite
 import numpy as np
 from PIL import Image
@@ -209,25 +210,30 @@ async def predecir(file: UploadFile = File(...)):
 
 @app.post("/chatbot")
 async def chatbot(req: ChatRequest):
-    try:
-        mensajes = [{"role": "system", "content": SYSTEM_PROMPT}]
+    mensajes = [{"role": "system", "content": SYSTEM_PROMPT}]
 
-        for msg in req.historial[-10:]:
-            mensajes.append({
-                "role": msg.get("role", "user"),
-                "content": msg.get("content", "")
-            })
+    for msg in req.historial[-10:]:
+        mensajes.append({
+            "role": msg.get("role", "user"),
+            "content": msg.get("content", "")
+        })
 
-        mensajes.append({"role": "user", "content": req.mensaje})
+    mensajes.append({"role": "user", "content": req.mensaje})
 
-        response = client.chat.completions.create(
-            model="nvidia/nemotron-3-ultra-550b-a55b:free",
-            messages=mensajes,
-            max_tokens=1500,
-            temperature=0.3
-        )
+    def generar_stream():
+        try:
+            stream = client.chat.completions.create(
+                model="nvidia/nemotron-3-ultra-550b-a55b:free",
+                messages=mensajes,
+                max_tokens=1500,
+                temperature=0.3,
+                stream=True,
+            )
+            for chunk in stream:
+                delta = chunk.choices[0].delta.content
+                if delta:
+                    yield delta
+        except Exception as e:
+            yield f"⚠️ Error al procesar tu consulta: {str(e)}"
 
-        return {"respuesta": response.choices[0].message.content}
-
-    except Exception as e:
-        return {"respuesta": f"Error al procesar tu consulta: {str(e)}"}
+    return StreamingResponse(generar_stream(), media_type="text/plain")
